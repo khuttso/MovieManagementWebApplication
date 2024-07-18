@@ -1,0 +1,11 @@
+{
+  "Version": 1,
+  "Hash": "ZEmKGM7YkKVFrG9692x2QEKYAMQtTpp8fEeHgeeJbeE=",
+  "Source": "MovieManagementWebApplication",
+  "BasePath": "_content/MovieManagementWebApplication",
+  "Mode": "Default",
+  "ManifestType": "Build",
+  "ReferencedProjectsConfiguration": [],
+  "DiscoveryPatterns": [],
+  "Assets": []
+}
