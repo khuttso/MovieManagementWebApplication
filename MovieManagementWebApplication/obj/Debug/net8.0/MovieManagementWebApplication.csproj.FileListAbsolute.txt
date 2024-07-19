@@ -66,3 +66,4 @@ C:\Users\asusVivo\RiderProjects\MovieManagementWebApplication\MovieManagementWeb
 C:\Users\asusVivo\RiderProjects\MovieManagementWebApplication\MovieManagementWebApplication\bin\Debug\net8.0\Microsoft.IdentityModel.Protocols.OpenIdConnect.dll
 C:\Users\asusVivo\RiderProjects\MovieManagementWebApplication\MovieManagementWebApplication\bin\Debug\net8.0\Microsoft.IdentityModel.Tokens.dll
 C:\Users\asusVivo\RiderProjects\MovieManagementWebApplication\MovieManagementWebApplication\bin\Debug\net8.0\System.IdentityModel.Tokens.Jwt.dll
+C:\Users\asusVivo\RiderProjects\MovieManagementWebApplication\MovieManagementWebApplication\obj\Debug\net8.0\MovieManagementWebApplication.sourcelink.json

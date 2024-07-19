@@ -30,12 +30,12 @@ public class UserRepository : IUserRepository
             @"CREATE TABLE IF NOT EXISTS Users (
                     ID NVARCHAR(100) PRIMARY KEY,
                     UserName NVARCHAR(256) NOT NULL,
-                    NormalizedUserName NVARCHAR(256) NOT NULL.
+                    NormalizedUserName NVARCHAR(256) NOT NULL,
                     Email NVARCHAR(256) NOT NULL,
                     NormalizedEmail NVARCHAR(256) NOT NULL,
                     EmailConfirmed BIT NOT NULL, 
-                    PasswordHash NVARCHAR(MAX) NOT NULL
-                );
+                    PasswordHash TEXT NOT NULL
+                )
             ";
 
         using (var command = new SQLiteCommand(createTableCommand, connection))
