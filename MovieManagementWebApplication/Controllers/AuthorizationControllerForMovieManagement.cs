@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using MovieManagementWebApplication.Models;
@@ -5,8 +6,9 @@ using MovieManagementWebApplication.Services;
 
 namespace MovieManagementWebApplication.Controllers;
 
-[Route("/api/[controller]")]
+[Route("/api/Authorization")]
 [ApiController]
+// [Authorize]
 public class AuthorizationControllerForMovieManagement : ControllerBase
 {
     private readonly IUserAuthorizationService _authorizationService;
@@ -17,6 +19,7 @@ public class AuthorizationControllerForMovieManagement : ControllerBase
     }
 
     [HttpPost("/register")]
+    // [Authorize]
     public async Task<ActionResult> RegisterUser([FromBody] RegisterModel model)
     {
         var token = await _authorizationService.RegisterAsync(model);
@@ -24,6 +27,7 @@ public class AuthorizationControllerForMovieManagement : ControllerBase
     }
 
     [HttpPost("/login")]
+    // [Authorize]
     public async Task<ActionResult> LoginUser([FromBody] LoginModel model)
     {
         var token = await _authorizationService.LoginAsync(model);

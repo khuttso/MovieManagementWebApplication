@@ -25,14 +25,18 @@ public class UserRepository : IUserRepository
     {
         using var connection = new SQLiteConnection(_connectionString);
         connection.Open();
-
+        // var dropTableCommand = @"DROP TABLE IF EXISTS Users";
+        // using (var command = new SQLiteCommand(dropTableCommand))
+        // {
+        //     command.ExecuteNonQuery();
+        // }
+        
+        
         var createTableCommand =
             @"CREATE TABLE IF NOT EXISTS Users (
-                    ID NVARCHAR(100) PRIMARY KEY,
-                    UserName NVARCHAR(256) NOT NULL,
-                    NormalizedUserName NVARCHAR(256) NOT NULL,
-                    Email NVARCHAR(256) NOT NULL,
-                    NormalizedEmail NVARCHAR(256) NOT NULL,
+                    ID NVARCHAR(40) PRIMARY KEY,
+                    UserName NVARCHAR(40) NOT NULL,
+                    Email NVARCHAR(40) NOT NULL,
                     EmailConfirmed BIT NOT NULL, 
                     PasswordHash TEXT NOT NULL
                 )
@@ -40,7 +44,7 @@ public class UserRepository : IUserRepository
 
         using (var command = new SQLiteCommand(createTableCommand, connection))
         {
-            command.ExecuteNonQueryAsync();
+            command.ExecuteNonQuery();
         }
     }
     
@@ -60,16 +64,19 @@ public class UserRepository : IUserRepository
         using (var connection = new SQLiteConnection(_connectionString))
         {
             connection.Open();
+            var hasher = new PasswordHasher<IdentityUser>();
+            user.PasswordHash = hasher.HashPassword(user, password);
+            user.NormalizedEmail = user.Email.ToUpper();
+            user.NormalizedUserName = user.UserName.ToUpper();
+            
             var result =  await connection.ExecuteAsync(
-                "INSERT INTO Users (Id, UserName, NormalizedUserName, Email, NormalizedEmail, EmailConfirmed, PasswordHash)" +
-                "VALUES (@Id, @UserName, @NormalizedUserName, @Email, @NormalizedEmail, @EmailConfirmed, @PasswordHash)",
+                "INSERT INTO Users (Id, UserName, Email, EmailConfirmed, PasswordHash)" +
+                "VALUES (@Id, @UserName, @Email, @EmailConfirmed, @PasswordHash)",
                 new
                 {
                     Id = user.Id,
                     UserName = user.UserName,
-                    NormalizedUserName = user.NormalizedUserName,
                     Email = user.Email,
-                    NormalizedEmail = user.NormalizedEmail,
                     EmailConfirmed = user.EmailConfirmed,
                     PasswordHash = user.PasswordHash
                 }
@@ -94,8 +101,8 @@ public class UserRepository : IUserRepository
         {
             connection.Open();
             return await connection.QueryFirstOrDefaultAsync<IdentityUser>(
-                "SELECT * FROM Users WHERE NormalizedUserName=@NormalizedUserName",
-                new { NormalizedUserName = name }
+                "SELECT * FROM Users WHERE UserName=@UserName",
+                new { UserName = name }
             );
         }
     }
@@ -112,6 +119,8 @@ public class UserRepository : IUserRepository
     /// <returns>true if password is correct, false otherwise</returns>
     public async Task<bool> CheckPasswordAsync(IdentityUser user, string password)
     {
-        return await Task.FromResult(user.PasswordHash == password);
+        PasswordHasher<IdentityUser> hasher = new PasswordHasher<IdentityUser>();
+        var result = hasher.VerifyHashedPassword(user, user.PasswordHash, password);
+        return result == PasswordVerificationResult.Success;
     }
 }

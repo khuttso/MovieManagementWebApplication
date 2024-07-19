@@ -20,6 +20,7 @@ public class MovieController : ControllerBase
         _logger = logger;
     }
 
+    
     [HttpGet("/GetAllMovies")]
     public async Task<ActionResult<IEnumerable<Movie>>> GetAllMovies()
     {
@@ -27,6 +28,7 @@ public class MovieController : ControllerBase
         return Ok(movies);
     }
 
+    
     [HttpGet("/GetMovieById")]
     public async Task<ActionResult<Movie>> GetMovieById(int id)
     {

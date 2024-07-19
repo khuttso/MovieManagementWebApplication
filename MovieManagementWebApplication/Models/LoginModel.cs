@@ -1,3 +1,5 @@
+using Microsoft.AspNetCore.Identity;
+
 namespace MovieManagementWebApplication.Models;
 
 public class LoginModel

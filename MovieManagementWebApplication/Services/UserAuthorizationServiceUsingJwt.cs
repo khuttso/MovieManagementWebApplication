@@ -38,10 +38,7 @@ public class UserAuthorizationServiceUsingJwt : IUserAuthorizationService
         {
             UserName = registerModel.Username,
             Email = registerModel.Email,
-            NormalizedUserName = registerModel.Username.ToUpper(),
-            NormalizedEmail = registerModel.Email.ToUpper(),
             EmailConfirmed = true,
-            PasswordHash = registerModel.Password
         };
         var result = await _repository.CreateUserAsync(user, registerModel.Password);
         if (result.Succeeded)
@@ -54,9 +51,9 @@ public class UserAuthorizationServiceUsingJwt : IUserAuthorizationService
 
     public async Task<string> LoginAsync(LoginModel loginModel)
     {
-        var user = await _repository.FindByNameAsync(loginModel.Username.ToUpper());
+        var user = await _repository.FindByNameAsync(loginModel.Username);
         if (await _repository.CheckPasswordAsync(user, loginModel.Password))
-        {
+        {       
             return GenerateJwtToken(user);
         }
 
@@ -97,20 +94,14 @@ public class UserAuthorizationServiceUsingJwt : IUserAuthorizationService
         {
             Subject = new ClaimsIdentity(new Claim[]
             {
-                // claim user id and name
                 new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
                 new Claim(ClaimTypes.Name, user.UserName)
             }),
 
-            Expires = DateTime.UtcNow.AddHours(0.5),
+            Expires = DateTime.UtcNow.AddHours(2),
             Issuer = _issuer,
             
             SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
-        };
-        var claims = new[]
-        {
-            new Claim(JwtRegisteredClaimNames.Sub, user.UserName),
-            new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
         };
 
         var token = tokenHandler.CreateToken(tokenDescriptor);

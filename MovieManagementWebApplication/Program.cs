@@ -19,8 +19,10 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddScoped<IDbConnection>(service =>
     new SQLiteConnection(builder.Configuration.GetConnectionString("DefaultConnection")));
 builder.Services.AddScoped<IMovieRepository, DapperMovieRepository>();
+
+// builder.Services.AddScoped<IDbConnection>()
 builder.Services.AddScoped<IUserRepository>(services =>
-    new UserRepository(builder.Configuration.GetConnectionString("DefaultConnection")));
+     new UserRepository(builder.Configuration.GetConnectionString("DefaultConnection")));
 builder.Services.AddScoped<IMovieService, MovieService>();
 builder.Services.AddScoped<IUserAuthorizationService, UserAuthorizationServiceUsingJwt>();
 builder.Services.AddControllers();
@@ -43,7 +45,8 @@ builder.Services.AddAuthentication(options =>
         ValidateIssuerSigningKey = true,
         ValidIssuer = builder.Configuration["Jwt:Issuer"],
         ValidAudience = builder.Configuration["JwtAudience"],
-        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Key"]))
+        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Key"])),
+        ClockSkew = TimeSpan.FromMinutes(5)
     };
 });
 // 
